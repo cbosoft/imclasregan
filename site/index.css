@@ -1,0 +1,40 @@
+body {
+    background-color: gray;
+}
+
+* {
+    color: rgb(230, 230, 230);
+    font-family: 'Roboto'
+}
+
+.buttonbox a {
+    background-color: rgb(50, 50, 50);
+    display: block;
+    padding: 3px;
+    margin-top: 2pt;
+    margin-bottom: 2pt;
+}
+
+.buttonbox a:hover {
+    background-color: rgb(70, 70, 70);
+}
+
+#container {
+    margin: auto;
+    width: 50%;
+}
+
+h1 {
+    text-align: center;
+    font-family: 'Poppins';
+}
+
+small {
+    position: fixed;
+    bottom: 5px;
+}
+
+canvas {
+    margin: auto;
+    display: block;
+}
