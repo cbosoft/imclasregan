@@ -1,5 +1,5 @@
 
-var current_image = {};
+var current_image = null;
 var progress = 0;
 var session_id = '';
 
@@ -19,6 +19,10 @@ function init() {
 }
 
 function get_image() {
+        var canvas = document.getElementById("image");
+        var ctx = canvas.getContext('2d');
+  ctx.clearRect(0, 0, canvas.width, canvas.height);
+  current_image = null;
     fetch('', {
         method: 'POST',
         headers: {
@@ -69,17 +73,19 @@ function set_classes_on_doc(data) {
 }
 
 function store_result(cid) {
+  if (current_image) {
     fetch('', {
         method: 'POST',
         headers: {
             'Accept': 'application/json',
             'Content-Type': 'application/json'
         },
-        body: JSON.stringify({ "command": "store_result", "cid": cid, "iid": current_image.iid, "sid": session_id })
+      body: JSON.stringify({ "command": "store_result", "cid": cid, "iid": current_image.iid, "sid": session_id, "tt": -1.0 })
     });
     get_image();
     progress += 1;
     update_progress_text();
+  }
 }
 
 function update_progress_text() {
