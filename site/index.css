@@ -24,9 +24,28 @@ body {
     background-color: rgb(70, 70, 70);
 }
 
+.lr {
+    display: flex;
+    justify-content: space-between;
+}
+
+.lr a {
+    width: 45%;
+    text-align: center;
+}
+
 #container {
     margin: auto;
     width: 400px;
+}
+
+#wide-container {
+    margin: auto;
+    width: 700px;
+}
+
+#regression_task {
+    text-decoration: underline;
 }
 
 h1 {
@@ -34,12 +53,7 @@ h1 {
     font-family: 'Poppins';
 }
 
-small {
-    position: fixed;
-    bottom: 5px;
-}
-
 canvas {
     margin: auto;
-    display: block;
+    display: inline-block;
 }

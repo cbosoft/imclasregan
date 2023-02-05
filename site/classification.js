@@ -1,8 +1,13 @@
+var state = { iid: null, progress: 0, sid: '', time_start: null };
 
-var current_image = null;
-var progress = 0;
-var session_id = '';
-var time_start = null;
+function init() {
+    get_image();
+    get_classes();
+    state.sid = uuidv4();
+    state.progress = 0;
+
+    console.log(state.sid);
+}
 
 function uuidv4() {
     return ([1e7] + -1e3 + -4e3 + -8e3 + -1e11).replace(/[018]/g, c =>
@@ -10,36 +15,31 @@ function uuidv4() {
     );
 }
 
-function init() {
-    get_image();
-    get_classes();
-    session_id = uuidv4();
-    progress = 0;
-
-    console.log(session_id);
+function send_data(o) {
+    return fetch('', {
+        method: 'POST',
+        headers: {
+            'Accept': 'application/json',
+            'Content-Type': 'application/json'
+        },
+        body: JSON.stringify(o)
+    });
 }
 
 function get_image() {
     var canvas = document.getElementById("image");
     var ctx = canvas.getContext('2d');
     ctx.clearRect(0, 0, canvas.width, canvas.height);
-    current_image = null;
-    fetch('', {
-        method: 'POST',
-        headers: {
-            'Accept': 'application/json',
-            'Content-Type': 'application/json'
-        },
-        body: JSON.stringify({ "command": "get_image" })
-    })
+    state.iid = null;
+    send_data({ command: "get_image" })
         .then(response => response.json())
         .then(set_image_on_doc);
 }
 
 function set_image_on_doc(data) {
     var imagedata = new ImageData(new Uint8ClampedArray(data.data), data.width, data.height);
-    current_image = { iid: data.iid };
-    start_time = Date.now();
+    state.iid = data.iid;
+    state.start_time = Date.now();
     var aspect_ratio = data.width / data.height;
     var big_height = 300.0;
     var big_width = big_height * aspect_ratio;
@@ -53,14 +53,7 @@ function set_image_on_doc(data) {
 }
 
 function get_classes() {
-    fetch('', {
-        method: 'POST',
-        headers: {
-            'Accept': 'application/json',
-            'Content-Type': 'application/json'
-        },
-        body: JSON.stringify({ "command": "get_classes" })
-    })
+    send_data({ command: "get_classes" })
         .then(response => response.json())
         .then(set_classes_on_doc);
 }
@@ -75,19 +68,12 @@ function set_classes_on_doc(data) {
 }
 
 function store_result(cid) {
-    if (current_image) {
+    if (state.iid) {
         var end_time = Date.now();
-        var time_diff = end_time - start_time;
-        fetch('', {
-            method: 'POST',
-            headers: {
-                'Accept': 'application/json',
-                'Content-Type': 'application/json'
-            },
-            body: JSON.stringify({ "command": "store_result", "cid": cid, "iid": current_image.iid, "sid": session_id, "tt": time_diff })
-        });
+        var time_diff = end_time - state.start_time;
+        send_data({ command: "store_result", kind: "classification", cid: cid, iid: state.iid, sid: state.sid, "tt": time_diff });
         get_image();
-        progress += 1;
+        state.progress += 1;
         update_progress_text();
     }
 }
@@ -95,12 +81,12 @@ function store_result(cid) {
 function update_progress_text() {
     var e = document.getElementById("thanksetc");
 
-    if (progress < 5) {
+    if (state.progress < 5) {
     }
-    else if (progress < 10) {
+    else if (state.progress < 10) {
         e.innerHTML = "You've annotated a fair few images, thanks!"
     }
     else {
-        e.innerHTML = "You've annotated " + progress + " images! Thanks! Your efforts are much appreciated " + String.fromCodePoint(0x2764)
+        e.innerHTML = "You've annotated " + state.progress + " images! Thanks! Your efforts are much appreciated " + "<span class=\"emoji\" > " + String.fromCodePoint(0x2764) + "</span > "
     }
 }

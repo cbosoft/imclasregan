@@ -44,8 +44,33 @@ def get_classes() -> dict:
     return rv
 
 
-def store_result(iid: int, cid: int, sid: str, tt: float) -> dict:
+def get_regression(kind: str) -> dict:
+    with _Database() as db:
+        db.cursor.execute('SELECT * FROM REGRESSIONS WHERE NAME=?;', (kind,))
+        result = db.cursor.fetchone()
+    if not result:
+        return dict(error=True, message=f'did not understand regression kind: {kind}')
+    else:
+        id, name, description, in_a_sentence = result
+        return dict(rid=id, name=name, description=description, in_a_sentence=in_a_sentence)
+
+
+def store_result(kind: str, **kwargs) -> dict:
+    if kind == 'classification':
+        return store_classification_result(**kwargs)
+    elif kind == 'regression':
+        return store_regression_result(**kwargs)
+
+
+def store_classification_result(iid: int, cid: int, sid: str, tt: float) -> dict:
     with _Database() as db:
         db.cursor.execute(
-            'INSERT INTO RESULTS (IMAGE_ID, CLASS_ID, SESSION_ID, TIME_TAKEN) VALUES (?, ?, ?, ?);',
+            'INSERT INTO CLASSIFICATIONRESULTS (IMAGE_ID, CLASS_ID, SESSION_ID, TIME_TAKEN) VALUES (?, ?, ?, ?);',
             (iid, cid, sid, tt))
+
+
+def store_regression_result(rid: int, lid: int, mid: int, sid: str, tt: float) -> dict:
+    with _Database() as db:
+        db.cursor.execute(
+            'INSERT INTO REGRESSIONRESULTS (REGRESSION_ID, IMAGE_ID_LESS, IMAGE_ID_MORE, SESSION_ID, TIME_TAKEN) VALUES (?, ?, ?, ?, ?);',
+            (rid, lid, mid, sid, tt))

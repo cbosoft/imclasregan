@@ -1,0 +1,39 @@
+<!DOCTYPE html>
+<html>
+
+<head>
+    <title>Image Labeller</title>
+    <link rel="preconnect" href="https://fonts.googleapis.com">
+    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+    <link
+        href="https://fonts.googleapis.com/css2?family=Poppins:wght@600&family=Roboto&display=swap"
+        rel="stylesheet">
+    <script type="text/javascript" src="regression.js"> </script>
+    <link rel="stylesheet" href="index.css" />
+</head>
+
+<body onload="init('focus')">
+    <div id="wide-container">
+        <h1>Compare the images...</h1>
+
+        <div class="lr">
+            <canvas id="image_l" height="300" width="300"></canvas>
+            <canvas id="image_r" height="300" width="300"></canvas>
+        </div>
+
+        <h1 style="text-align: center;">Select the imge which is more <span
+                id="regression_task"></span>.</h1>
+        <p style="text-align: center;" id="regression_description"></p>
+        <div class="buttonbox lr">
+            <a href="#" onclick="select_left()">left</a>
+            <a href="#" onclick="select_right()">right</a>
+        </div>
+
+        <h2 id="thanksetc"></h2>
+
+        <small>Made by Chris (<a
+                href="mailto:christopher.boyle.101@strath.ac.uk">christopher.boyle.101@strath.ac.uk</a>)</small>
+    </div>
+</body>
+
+</html>

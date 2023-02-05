@@ -1,7 +1,7 @@
 import json
 from http.server import SimpleHTTPRequestHandler
 
-from .database import get_classes, get_image, store_result
+from .database import get_classes, get_image, store_result, get_regression
 
 
 class ImClasRegAnServer(SimpleHTTPRequestHandler):
@@ -25,6 +25,8 @@ class ImClasRegAnServer(SimpleHTTPRequestHandler):
             return get_image()
         elif command == 'get_classes':
             return get_classes()
+        elif command == 'get_regression':
+            return get_regression(**kwargs)
         elif command == 'store_result':
             return store_result(**kwargs)
         else:
