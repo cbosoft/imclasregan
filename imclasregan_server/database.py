@@ -7,7 +7,6 @@ import numpy as np
 class _Database:
 
     def __init__(self):
-        print(os.path.abspath('.'))
         self.conn = sqlite3.connect('database.db')
         self.cursor = self.conn.cursor()
 
