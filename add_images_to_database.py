@@ -17,6 +17,7 @@ def add_image(name: str):
         db.cursor.execute(
             'INSERT INTO IMAGES(name, data, width, height) VALUES (?, ?, ?, ?)',
             (name, data, width, height))
+        db.conn.commit()
 
 
 def remove_from_inbox(fn: str):
