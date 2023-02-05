@@ -13,6 +13,11 @@ body {
     padding: 3px;
     margin-top: 2pt;
     margin-bottom: 2pt;
+    text-decoration: none;
+}
+
+.buttonbox b {
+    margin-bottom: 2pt;
 }
 
 .buttonbox a:hover {
@@ -21,7 +26,7 @@ body {
 
 #container {
     margin: auto;
-    width: 50%;
+    width: 400px;
 }
 
 h1 {

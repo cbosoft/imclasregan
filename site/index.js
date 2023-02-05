@@ -68,7 +68,7 @@ function get_classes() {
 function set_classes_on_doc(data) {
     buttons = ""
     for (classdata of data.classes) {
-        buttons += "<a class=\"button\" href=\"#\" onclick=\"store_result(" + classdata.cid + ")\"><b>" + classdata.name + "</b> " + classdata.description + "</a><br />";
+        buttons += "<a class=\"button\" href=\"#\" onclick=\"store_result(" + classdata.cid + ")\"><b>" + classdata.name + "</b><br/>" + classdata.description + "</a><br />";
     }
     var e = document.getElementById("classes");
     e.innerHTML = buttons;
