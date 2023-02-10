@@ -1,7 +1,3 @@
-# Python stuff
-*.pyc
-__pycache__
-
 # Editor stuff
 .vscode
 *.un~
