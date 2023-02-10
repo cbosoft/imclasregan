@@ -1,8 +1,21 @@
+# Python stuff
 *.pyc
 __pycache__
+
+# Editor stuff
 .vscode
-database.db
-*.DS_Store
 *.un~
+
+# OS Stuff
+*.DS_Store
+
+# Database
+*.db
 inbox
 processed_images
+
+# Rust
+Cargo.lock
+
+# Build outputs
+target

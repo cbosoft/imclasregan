@@ -16,7 +16,7 @@ function uuidv4() {
 }
 
 function send_data(o) {
-    return fetch('', {
+    return fetch('/site', {
         method: 'POST',
         headers: {
             'Accept': 'application/json',
@@ -31,7 +31,7 @@ function get_image() {
     var ctx = canvas.getContext('2d');
     ctx.clearRect(0, 0, canvas.width, canvas.height);
     state.iid = null;
-    send_data({ command: "get_image" })
+    send_data({ command: "GetImage" })
         .then(response => response.json())
         .then(set_image_on_doc);
 }
@@ -53,14 +53,14 @@ function set_image_on_doc(data) {
 }
 
 function get_classes() {
-    send_data({ command: "get_classes" })
+    send_data({ command: "GetClassifications" })
         .then(response => response.json())
         .then(set_classes_on_doc);
 }
 
 function set_classes_on_doc(data) {
     buttons = ""
-    for (classdata of data.classes) {
+    for (classdata of data) {
         buttons += "<a class=\"button\" href=\"#\" onclick=\"store_result(" + classdata.cid + ")\"><b>" + classdata.name + "</b><br/>" + classdata.description + "</a><br />";
     }
     var e = document.getElementById("classes");
@@ -71,7 +71,7 @@ function store_result(cid) {
     if (state.iid) {
         var end_time = Date.now();
         var time_diff = end_time - state.start_time;
-        send_data({ command: "store_result", kind: "classification", cid: cid, iid: state.iid, sid: state.sid, "tt": time_diff });
+        send_data({ command: "StoreClassificationResult", cid: cid, iid: state.iid, sid: state.sid, "tt": time_diff });
         get_image();
         state.progress += 1;
         update_progress_text();

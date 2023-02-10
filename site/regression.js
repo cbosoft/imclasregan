@@ -16,7 +16,7 @@ function uuidv4() {
 }
 
 function send_data(o) {
-    return fetch('', {
+    return fetch('/site', {
         method: 'POST',
         headers: {
             'Accept': 'application/json',
@@ -27,7 +27,7 @@ function send_data(o) {
 }
 
 function get_one_image() {
-    send_data({ command: "get_image" })
+    send_data({ command: "GetImage" })
         .then(response => response.json())
         .then(set_image_on_doc);
 }
@@ -77,12 +77,13 @@ function set_image_on_doc(data) {
 }
 
 function get_regression(regression_kind) {
-    send_data({ command: "get_regression", kind: regression_kind })
+    send_data({ command: "GetRegression", kind: regression_kind })
         .then(response => response.json())
         .then(set_regression_on_doc);
 }
 
 function set_regression_on_doc(data) {
+    console.log(data);
     var e = document.getElementById("regression_task");
     e.innerHTML = data.in_a_sentence;
     var e = document.getElementById("regression_description");
@@ -102,7 +103,7 @@ function store_result(lid, mid) {
     if (state.lid && state.rid) {
         var end_time = Date.now();
         var time_diff = end_time - state.start_time;
-        send_data({ command: "store_result", kind: "regression", rid: state.regid, lid: lid, mid: mid, sid: state.sid, "tt": time_diff });
+        send_data({ command: "StoreRegressionResult", rid: state.regid, lid: lid, mid: mid, sid: state.sid, "tt": time_diff });
         get_image();
         state.progress += 1;
         update_progress_text();
