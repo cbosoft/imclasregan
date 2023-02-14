@@ -1,6 +1,7 @@
 # Editor stuff
 .vscode
 *.un~
+tags
 
 # OS Stuff
 *.DS_Store
@@ -13,5 +14,6 @@ processed_images
 # Rust
 Cargo.lock
 
-# Build outputs
+# Build outputs and implementation-specific scripts
 target
+run_server.sh
