@@ -65,8 +65,19 @@ function set_image_on_doc(data) {
     }
     state.start_time = Date.now();
     var aspect_ratio = data.width / data.height;
-    var big_height = 300.0;
-    var big_width = big_height * aspect_ratio;
+    var long_length = 300.0;
+    var big_width = long_length;
+    var big_height = long_length;
+
+    if (aspect_ratio < 1.0) {
+        // tall
+        big_width = aspect_ratio * big_height;
+    }
+    else {
+        // wide
+        big_height = big_width / aspect_ratio;
+    }
+
     createImageBitmap(imagedata, { resizeWidth: big_width, resizeHeight: big_height, resizeQuality: "high" }).then(bitmap => {
         var canvas = document.getElementById(canvas_id);
         var ctx = canvas.getContext('2d');

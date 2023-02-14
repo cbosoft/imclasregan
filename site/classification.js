@@ -41,8 +41,19 @@ function set_image_on_doc(data) {
     state.iid = data.iid;
     state.start_time = Date.now();
     var aspect_ratio = data.width / data.height;
-    var big_height = 300.0;
-    var big_width = big_height * aspect_ratio;
+    var long_length = 300.0;
+    var big_width = long_length;
+    var big_height = long_length;
+
+    if (aspect_ratio < 1.0) {
+        // tall
+        big_width = aspect_ratio * big_height;
+    }
+    else {
+        // wide
+        big_height = big_width / aspect_ratio;
+    }
+
     createImageBitmap(imagedata, { resizeWidth: big_width, resizeHeight: big_height, resizeQuality: "high" }).then(bitmap => {
         var canvas = document.getElementById("image");
         var ctx = canvas.getContext('2d');
@@ -61,7 +72,7 @@ function get_classes() {
 function set_classes_on_doc(data) {
     buttons = ""
     for (classdata of data) {
-        buttons += "<a class=\"button\" href=\"#\" onclick=\"store_result(" + classdata.cid + ")\"><b>" + classdata.name + "</b><br/>" + classdata.description + "</a><br />";
+        buttons += "<a class=\"button\" href=\"#\" onclick=\"store_result(" + classdata.cid + ")\"><b>" + classdata.name + "</b><br/>" + classdata.description + "</a>";
     }
     var e = document.getElementById("classes");
     e.innerHTML = buttons;
