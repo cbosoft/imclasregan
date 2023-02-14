@@ -3,7 +3,7 @@ use crate::reply::{ClassData, Reply};
 pub fn store_regression(rid: i64, lid: i64, mid: i64, sid: &str, tt: f64) -> Reply {
     let conn = sqlite::Connection::open("./database.db").unwrap();
     let mut statement = conn
-        .prepare("INSERT INTO CLASSIFICATIONRESULTS (REGRESSION_ID, IMAGE_ID_LESS, IMAGE_ID_MORE, SESSION_ID, TIME_TAKEN) VALUES (?, ?, ?, ?, ?);")
+        .prepare("INSERT INTO REGRESSIONRESULTS (REGRESSION_ID, IMAGE_ID_LESS, IMAGE_ID_MORE, SESSION_ID, TIME_TAKEN) VALUES (?, ?, ?, ?, ?);")
         .unwrap();
 
     statement.bind((1, rid)).unwrap();
