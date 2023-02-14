@@ -3,8 +3,12 @@ body {
 }
 
 * {
-    color: rgb(230, 230, 230);
+    color: rgb(20, 20, 20);
     font-family: 'Roboto'
+}
+
+.buttonbox * {
+    color: rgb(230, 230, 230);
 }
 
 .buttonbox a {
@@ -43,6 +47,14 @@ body {
     flex-direction: row;
     align-items: center;
     justify-content: center;
+}
+
+.outer {
+    background-color: rgb(230, 230, 230);
+    padding: 2em;
+    border-radius: 2em;
+    border: 2em;
+    border-color: rgb(230, 230, 230);
 }
 
 #container {
