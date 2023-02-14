@@ -10,14 +10,17 @@ body {
 .buttonbox a {
     background-color: rgb(50, 50, 50);
     display: block;
-    padding: 3px;
-    margin-top: 2pt;
-    margin-bottom: 2pt;
+    padding: 5pt;
+    margin-top: 3pt;
+    margin-bottom: 3pt;
     text-decoration: none;
+    border-radius: 5pt;
+    border: 5pt;
+    border-color: rgb(50, 50, 50);
 }
 
 .buttonbox b {
-    margin-bottom: 2pt;
+    margin-bottom: 1pt;
 }
 
 .buttonbox a:hover {
@@ -34,9 +37,23 @@ body {
     text-align: center;
 }
 
+.vcenter {
+    height: 100vh;
+    display: flex;
+    flex-direction: row;
+    align-items: center;
+    justify-content: center;
+}
+
 #container {
-    margin: auto;
-    width: 400px;
+    /* margin: auto; */
+    /* width: 400px; */
+    /* height: 75vh; */
+    display: flex;
+    flex-direction: row;
+    align-items: center;
+    justify-content: center;
+    flex-wrap: wrap;
 }
 
 #wide-container {
