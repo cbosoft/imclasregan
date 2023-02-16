@@ -1,5 +1,20 @@
 use crate::reply::{ClassData, Reply};
 
+/// Insert a regression result into the server. In a regression task, the user
+/// is asked to choose an image from a pair which is more representative of a
+/// given *quality* (e.g. in focus).
+///
+/// A regression result consists of
+///  - `rid` - the id specifying the regression,
+///  - `lid` - the id of the image which is less *quality*,
+///  - `mid` - the id of the image which is more *quality*,
+///  - `sid` - a UUID indicating which user session the result came from, and
+///  - `tt` - the time taken in milliseconds for the user to make the choice.
+///
+/// Returns [Reply::Ok]
+///
+/// # Panics
+/// Panics if the database cannot be opened.
 pub fn store_regression(rid: i64, lid: i64, mid: i64, sid: &str, tt: f64) -> Reply {
     let conn = sqlite::Connection::open("./database.db").unwrap();
     let mut statement = conn
@@ -15,6 +30,19 @@ pub fn store_regression(rid: i64, lid: i64, mid: i64, sid: &str, tt: f64) -> Rep
     Reply::Ok
 }
 
+/// Insert a classification result into the server. In a classification task, the
+/// user is asked to choose a fitting label for a given image.
+///
+/// A regression result consists of
+///  - `cid` - the id specifying the chosen class label,
+///  - `iid` - the id of the image,
+///  - `sid` - a UUID indicating which user session the result came from, and
+///  - `tt` - the time taken in milliseconds for the user to make the choice.
+///
+/// Returns [Reply::Ok]
+///
+/// # Panics
+/// Panics if the database cannot be opened.
 pub fn store_classification(cid: i64, iid: i64, sid: &str, tt: f64) -> Reply {
     let conn = sqlite::Connection::open("./database.db").unwrap();
     let mut statement = conn
@@ -29,6 +57,11 @@ pub fn store_classification(cid: i64, iid: i64, sid: &str, tt: f64) -> Reply {
     Reply::Ok
 }
 
+/// Get an random image from the database and return it as [Reply::Image] if
+/// there are images available, or as [Reply::Error] otherwise.
+///
+/// # Panics
+/// Panics if the database cannot be opened.
 pub fn get_image() -> Reply {
     let conn = sqlite::Connection::open("./database.db").unwrap();
     let mut statement = conn
@@ -61,6 +94,11 @@ pub fn get_image() -> Reply {
     }
 }
 
+/// Gets information on the class labels for the classification task and
+/// returns it as [Reply::Classifications].
+///
+/// # Panics
+/// Panics if the database cannot be opened.
 pub fn get_classes() -> Reply {
     let conn = sqlite::Connection::open("./database.db").unwrap();
     let mut classes: Vec<ClassData> = Vec::new();
@@ -76,6 +114,11 @@ pub fn get_classes() -> Reply {
     Reply::Classifications(classes)
 }
 
+/// Gets information on the regression task specified by the name `kind`. Result
+/// is returned as [Reply::Regression] if regression is found, or [Reply::Error] otherwise.
+///
+/// # Panics
+/// Panics if the database cannot be opened.
 pub fn get_regression<'a>(kind: &'a str) -> Reply {
     let conn = sqlite::Connection::open("./database.db").unwrap();
     let mut statement = conn
@@ -92,7 +135,7 @@ pub fn get_regression<'a>(kind: &'a str) -> Reply {
         }
     } else {
         Reply::Error {
-            message: "no images?!".to_string(),
+            message: format!("Could not find information on regression task '{kind}'"),
         }
     }
 }
