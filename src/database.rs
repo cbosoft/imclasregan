@@ -27,6 +27,8 @@ pub fn store_regression(rid: i64, lid: i64, mid: i64, sid: &str, tt: f64) -> Rep
     statement.bind((4, sid)).unwrap();
     statement.bind((4, tt)).unwrap();
 
+    let _ = statement.next();
+
     Reply::Ok
 }
 
@@ -53,6 +55,8 @@ pub fn store_classification(cid: i64, iid: i64, sid: &str, tt: f64) -> Reply {
     statement.bind((2, cid)).unwrap();
     statement.bind((3, iid)).unwrap();
     statement.bind((4, tt)).unwrap();
+
+    let _ = statement.next();
 
     Reply::Ok
 }
