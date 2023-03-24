@@ -46,7 +46,14 @@ function get_image() {
 }
 
 function set_image_on_doc(data) {
-    var imagedata = new ImageData(new Uint8ClampedArray(data.data), data.width, data.height);
+    try {
+        var imagedata = new ImageData(new Uint8ClampedArray(data.data), data.width, data.height);
+    }
+    catch (e) {
+        get_one_image();
+        return;
+    }
+
     var canvas_id = null;
     if (state.lid) {
         if (state.lid != data.iid) {

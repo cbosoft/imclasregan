@@ -37,7 +37,14 @@ function get_image() {
 }
 
 function set_image_on_doc(data) {
-    var imagedata = new ImageData(new Uint8ClampedArray(data.data), data.width, data.height);
+    try {
+        var imagedata = new ImageData(new Uint8ClampedArray(data.data), data.width, data.height);
+    }
+    catch (e) {
+        get_image();
+        return;
+    }
+
     state.iid = data.iid;
     state.start_time = Date.now();
     var aspect_ratio = data.width / data.height;
