@@ -61,6 +61,37 @@ pub fn store_classification(cid: i64, iid: i64, sid: &str, tt: f64) -> Reply {
     Reply::Ok
 }
 
+/// Insert a multi-label classification result into the server. In a classification task, the
+/// user is asked to choose one or more fitting labels for a given image.
+///
+/// A classification result consists of
+///  - `cid` - the id specifying the chosen class label,
+///  - `iid` - the id of the image,
+///  - `sid` - a UUID indicating which user session the result came from, and
+///  - `tt` - the time taken in milliseconds for the user to make the choice.
+///
+/// In multi label classification, multiple of these labels are stored per image at once.
+///
+/// Returns [Reply::Ok]
+///
+/// # Panics
+/// Panics if the database cannot be opened.
+pub fn store_multilabel_classification(cid: i64, iid: i64, sid: &str, tt: f64) -> Reply {
+    let conn = sqlite::Connection::open("./database.db").unwrap();
+    let mut statement = conn
+        .prepare("INSERT INTO MULTILABELCLASSIFICATIONRESULTS (SESSION_ID, CLASS_ID, IMAGE_ID, TIME_TAKEN) VALUES (?, ?, ?, ?);")
+        .unwrap();
+
+    statement.bind((1, sid)).unwrap();
+    statement.bind((2, cid)).unwrap();
+    statement.bind((3, iid)).unwrap();
+    statement.bind((4, tt)).unwrap();
+
+    let _ = statement.next();
+
+    Reply::Ok
+}
+
 /// Get an random image from the database and return it as [Reply::Image] if
 /// there are images available, or as [Reply::Error] otherwise.
 ///

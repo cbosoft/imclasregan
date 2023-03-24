@@ -20,7 +20,8 @@ use rocket::serde::json::Json;
 
 use crate::command::Command;
 use crate::database::{
-    get_classes, get_image, get_regression, store_classification, store_regression,
+    get_classes, get_image, get_regression, store_classification, store_multilabel_classification,
+    store_regression,
 };
 
 /// [Command] handler function. A command is serialised in json format and
@@ -41,6 +42,9 @@ async fn command_handler(cmd: Json<Command<'_>>) -> content::RawJson<String> {
         Command::GetRegression { kind } => get_regression(kind),
         Command::StoreClassificationResult { cid, iid, sid, tt } => {
             store_classification(cid, iid, sid, tt)
+        }
+        Command::StoreMultilabelClassificationResult { cid, iid, sid, tt } => {
+            store_multilabel_classification(cid, iid, sid, tt)
         }
         Command::StoreRegressionResult {
             rid,

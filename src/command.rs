@@ -36,6 +36,18 @@ pub enum Command<'r> {
         tt: f64,
     },
 
+    /// The user has completed a regression annotation, and the client requests
+    /// the information be stored.
+    ///
+    /// See [store_multilabel_classification](crate::database::store_multilabel_classification) for more
+    /// information.
+    StoreMultilabelClassificationResult {
+        cid: i64,
+        iid: i64,
+        sid: &'r str,
+        tt: f64,
+    },
+
     /// The user has completed a regression annotation and the client
     /// requests the information be stored.
     ///
