@@ -52,4 +52,13 @@ pub enum Reply {
     /// Information about a classification task or, rather, information on the
     /// classes used to classify the images. This is a vector of [ClassData].
     Classifications(Vec<ClassData>),
+
+    // Summarising information about the dataset
+    DatasetSummary {
+        image_count: i64,
+        classified_image_count: i64,
+        multilabelclassified_image_count: i64,
+        classified_annotations_count: i64,
+        multilabelclassified_annotations_count: i64,
+    },
 }

@@ -60,4 +60,7 @@ pub enum Command<'r> {
         sid: &'r str,
         tt: f64,
     },
+
+    /// Ask for a summary of the database contents - how many images, how many annotations, etc
+    GetDatasetSummary,
 }

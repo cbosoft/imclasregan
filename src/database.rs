@@ -180,3 +180,69 @@ pub fn get_regression<'a>(kind: &'a str) -> Reply {
         }
     }
 }
+
+pub fn get_dataset_summary() -> Reply {
+    let conn = connect();
+
+    let mut statement = conn.prepare("SELECT COUNT(*) FROM IMAGES;").unwrap();
+
+    let image_count = if let Ok(sqlite::State::Row) = statement.next() {
+        statement.read::<i64, _>(0).unwrap()
+    } else {
+        return Reply::Error {
+            message: "failed to get image count.".to_string(),
+        };
+    };
+
+    let mut statement = conn
+        .prepare("SELECT COUNT(DISTINCT IMAGE_ID) FROM CLASSIFICATIONRESULTS;")
+        .unwrap();
+    let classified_image_count = if let Ok(sqlite::State::Row) = statement.next() {
+        statement.read::<i64, _>(0).unwrap()
+    } else {
+        return Reply::Error {
+            message: "failed to get image count.".to_string(),
+        };
+    };
+
+    let mut statement = conn
+        .prepare("SELECT COUNT(DISTINCT IMAGE_ID) FROM MULTILABELCLASSIFICATIONRESULTS;")
+        .unwrap();
+    let multilabelclassified_image_count = if let Ok(sqlite::State::Row) = statement.next() {
+        statement.read::<i64, _>(0).unwrap()
+    } else {
+        return Reply::Error {
+            message: "failed to get image count.".to_string(),
+        };
+    };
+
+    let mut statement = conn
+        .prepare("SELECT COUNT(*) FROM CLASSIFICATIONRESULTS;")
+        .unwrap();
+    let classified_annotations_count = if let Ok(sqlite::State::Row) = statement.next() {
+        statement.read::<i64, _>(0).unwrap()
+    } else {
+        return Reply::Error {
+            message: "failed to get image count.".to_string(),
+        };
+    };
+
+    let mut statement = conn
+        .prepare("SELECT COUNT(*) FROM MULTILABELCLASSIFICATIONRESULTS;")
+        .unwrap();
+    let multilabelclassified_annotations_count = if let Ok(sqlite::State::Row) = statement.next() {
+        statement.read::<i64, _>(0).unwrap()
+    } else {
+        return Reply::Error {
+            message: "failed to get image count.".to_string(),
+        };
+    };
+
+    Reply::DatasetSummary {
+        image_count,
+        classified_image_count,
+        multilabelclassified_image_count,
+        classified_annotations_count,
+        multilabelclassified_annotations_count,
+    }
+}
