@@ -1,0 +1,40 @@
+<!DOCTYPE html>
+<html>
+
+<head>
+    <title>Image Labeller</title>
+    <link rel="preconnect" href="https://fonts.googleapis.com">
+    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+    <link
+        href="https://fonts.googleapis.com/css2?family=Poppins:wght@600&family=Roboto&display=swap"
+        rel="stylesheet">
+
+    <link rel="stylesheet" href="index.css" />
+    <script src="summary.js"></script>
+</head>
+
+<body>
+    <div class="vcenter">
+        <div class="outer">
+            <div id="vert-container">
+                <h1>
+                    Out of <span id="total_images" class="highlight">100</span>
+                    images...</h1>
+                <h1 id="singlelabel_results">
+                    ... we've classified <span id="classified_images"
+                        class="highlight">10</span> with a total of <span
+                        id="total_annotations" class="highlight">15
+                    </span> single-label annotations!
+                </h1>
+                <h1 id="multilabel_results">
+                    ... we've classified <span id="multilabel_classified_images"
+                        class="highlight">10</span> with a total of <span
+                        id="total_multilabel_annotations" class="highlight">15
+                    </span> multi-label annotations!
+                </h1>
+            </div>
+        </div>
+    </div>
+</body>
+
+</html>
