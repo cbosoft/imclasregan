@@ -68,9 +68,12 @@ pub fn store_classification(cid: i64, iid: i64, sid: &str, tt: f64) -> Reply {
 /// Panics if the database cannot be opened.
 pub fn get_image() -> Reply {
     let conn = sqlite::Connection::open("./database.db").unwrap();
-    let mut statement = conn
-        .prepare("SELECT * FROM IMAGES ORDER BY RANDOM() LIMIT 1;")
-        .unwrap();
+    let mut statement = loop {
+        match conn.prepare("SELECT * FROM IMAGES ORDER BY RANDOM() LIMIT 1;") {
+            Ok(stmt) => break stmt,
+            _ => (),
+        }
+    };
 
     if let Ok(sqlite::State::Row) = statement.next() {
         let data_rgb = statement.read::<Vec<u8>, _>("DATA").unwrap();
