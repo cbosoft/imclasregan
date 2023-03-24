@@ -91,3 +91,15 @@ canvas {
     margin: auto;
     display: inline-block;
 }
+
+.buttonbox a.selected {
+    background-color: white;
+    color: black;
+    border-color: white;
+}
+
+.buttonbox a.selected b {
+    background-color: white;
+    color: black;
+    border-color: white;
+}
