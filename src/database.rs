@@ -1,5 +1,11 @@
 use crate::reply::{ClassData, Reply};
 
+fn connect() -> sqlite::Connection {
+    let mut conn = sqlite::Connection::open("./database.db").unwrap();
+    conn.set_busy_timeout(100).unwrap();
+    conn
+}
+
 /// Insert a regression result into the server. In a regression task, the user
 /// is asked to choose an image from a pair which is more representative of a
 /// given *quality* (e.g. in focus).
@@ -16,7 +22,7 @@ use crate::reply::{ClassData, Reply};
 /// # Panics
 /// Panics if the database cannot be opened.
 pub fn store_regression(rid: i64, lid: i64, mid: i64, sid: &str, tt: f64) -> Reply {
-    let conn = sqlite::Connection::open("./database.db").unwrap();
+    let conn = connect();
     let mut statement = conn
         .prepare("INSERT INTO REGRESSIONRESULTS (REGRESSION_ID, IMAGE_ID_LESS, IMAGE_ID_MORE, SESSION_ID, TIME_TAKEN) VALUES (?, ?, ?, ?, ?);")
         .unwrap();
@@ -46,7 +52,7 @@ pub fn store_regression(rid: i64, lid: i64, mid: i64, sid: &str, tt: f64) -> Rep
 /// # Panics
 /// Panics if the database cannot be opened.
 pub fn store_classification(cid: i64, iid: i64, sid: &str, tt: f64) -> Reply {
-    let conn = sqlite::Connection::open("./database.db").unwrap();
+    let conn = connect();
     let mut statement = conn
         .prepare("INSERT INTO CLASSIFICATIONRESULTS (SESSION_ID, CLASS_ID, IMAGE_ID, TIME_TAKEN) VALUES (?, ?, ?, ?);")
         .unwrap();
@@ -77,7 +83,7 @@ pub fn store_classification(cid: i64, iid: i64, sid: &str, tt: f64) -> Reply {
 /// # Panics
 /// Panics if the database cannot be opened.
 pub fn store_multilabel_classification(cid: i64, iid: i64, sid: &str, tt: f64) -> Reply {
-    let conn = sqlite::Connection::open("./database.db").unwrap();
+    let conn = connect();
     let mut statement = conn
         .prepare("INSERT INTO MULTILABELCLASSIFICATIONRESULTS (SESSION_ID, CLASS_ID, IMAGE_ID, TIME_TAKEN) VALUES (?, ?, ?, ?);")
         .unwrap();
@@ -98,13 +104,10 @@ pub fn store_multilabel_classification(cid: i64, iid: i64, sid: &str, tt: f64) -
 /// # Panics
 /// Panics if the database cannot be opened.
 pub fn get_image() -> Reply {
-    let conn = sqlite::Connection::open("./database.db").unwrap();
-    let mut statement = loop {
-        match conn.prepare("SELECT * FROM IMAGES ORDER BY RANDOM() LIMIT 1;") {
-            Ok(stmt) => break stmt,
-            _ => (),
-        }
-    };
+    let conn = connect();
+    let mut statement = conn
+        .prepare("SELECT * FROM IMAGES ORDER BY RANDOM() LIMIT 1;")
+        .unwrap();
 
     if let Ok(sqlite::State::Row) = statement.next() {
         let data_rgb = statement.read::<Vec<u8>, _>("DATA").unwrap();
@@ -138,7 +141,7 @@ pub fn get_image() -> Reply {
 /// # Panics
 /// Panics if the database cannot be opened.
 pub fn get_classes() -> Reply {
-    let conn = sqlite::Connection::open("./database.db").unwrap();
+    let conn = connect();
     let mut classes: Vec<ClassData> = Vec::new();
     let mut statement = conn.prepare("SELECT * FROM CLASSIFICATIONS;").unwrap();
     while let Ok(sqlite::State::Row) = statement.next() {
@@ -158,7 +161,7 @@ pub fn get_classes() -> Reply {
 /// # Panics
 /// Panics if the database cannot be opened.
 pub fn get_regression<'a>(kind: &'a str) -> Reply {
-    let conn = sqlite::Connection::open("./database.db").unwrap();
+    let conn = connect();
     let mut statement = conn
         .prepare("SELECT * FROM REGRESSIONS WHERE NAME=?;")
         .unwrap();
