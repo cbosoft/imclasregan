@@ -1,0 +1,58 @@
+<!DOCTYPE html>
+<html>
+
+<head>
+    <title>Image Labeller</title>
+    <link rel="preconnect" href="https://fonts.googleapis.com">
+    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+    <link
+        href="https://fonts.googleapis.com/css2?family=Poppins:wght@600&family=Roboto&display=swap"
+        rel="stylesheet">
+    <script type="text/javascript" src="multilabel_classification.js"> </script>
+    <link rel="stylesheet" href="index.css" />
+</head>
+
+<body onload="init()">
+    <div class="vcenter">
+        <div class="outer">
+            <center>
+                <h1>Classify the image!</h1>
+            </center>
+
+            <div id="container">
+
+                <div style="width:400px;">
+                    <center>
+                        <canvas id="image" height="300" width="300"></canvas>
+                    </center>
+
+                    <ul>
+                        <li>The image, ideally, will centre on a single
+                            particle.</li>
+                        <li>There may be multiple collected together.</li>
+                        <li>The image may be very dark or very bright, making it
+                            tough to see any particles.</li>
+                        <li>Select <b>one or more</b> labels which best
+                            describe the contents of the image.</li>
+                    </ul>
+                </div>
+
+                <div style="width:400px;">
+                    <div id="classes" class="buttonbox">
+                    </div>
+                    <div id="submit" class="buttonbox">
+                        <a class="button" onclick="store_result();">Submit!</a>
+                    </div>
+                </div>
+            </div>
+
+            <center>
+                <h2 id="thanksetc"></h2>
+                <small>Made by Chris (<a
+                        href="mailto:christopher.boyle.101@strath.ac.uk">christopher.boyle.101@strath.ac.uk</a>)</small>
+            </center>
+        </div>
+    </div>
+</body>
+
+</html>
