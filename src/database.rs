@@ -35,7 +35,7 @@ pub fn store_regression(rid: i64, lid: i64, mid: i64, sid: &str, tt: f64) -> Rep
 /// Insert a classification result into the server. In a classification task, the
 /// user is asked to choose a fitting label for a given image.
 ///
-/// A regression result consists of
+/// A classification result consists of
 ///  - `cid` - the id specifying the chosen class label,
 ///  - `iid` - the id of the image,
 ///  - `sid` - a UUID indicating which user session the result came from, and

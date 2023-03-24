@@ -24,7 +24,7 @@ pub enum Command<'r> {
     /// information.
     GetRegression { kind: &'r str },
 
-    /// The user has completed a regression annotation, and the client requests
+    /// The user has completed a classification annotation, and the client requests
     /// the information be stored.
     ///
     /// See [store_classification](crate::database::store_classification) for more
@@ -36,7 +36,7 @@ pub enum Command<'r> {
         tt: f64,
     },
 
-    /// The user has completed a classification annotation and the client
+    /// The user has completed a regression annotation and the client
     /// requests the information be stored.
     ///
     /// See [store_regression](crate::database::store_regression) for more
