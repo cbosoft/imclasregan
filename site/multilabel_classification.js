@@ -1,12 +1,13 @@
-var state = { iid: null, progress: 0, sid: '', time_start: null, labels: [] };
+var state = { iid: null, progress: 0, sid: '', time_start: null, labels: [], retries: 0 };
 
 function init() {
-    get_image();
-    get_classes();
-    state.sid = uuidv4();
-    state.progress = 0;
+  get_image();
+  get_classes();
+  state.sid = uuidv4();
+  state.progress = 0;
+  state.retries = 0;
 
-    console.log(state.sid);
+  console.log(state.sid);
 }
 
 function uuidv4() {
@@ -37,13 +38,6 @@ function get_image() {
 }
 
 function set_image_on_doc(data) {
-    try {
-        var imagedata = new ImageData(new Uint8ClampedArray(data.data), data.width, data.height);
-    }
-    catch (e) {
-        get_image();
-        return;
-    }
     state.iid = data.iid;
     state.start_time = Date.now();
     var aspect_ratio = data.width / data.height;
@@ -58,7 +52,19 @@ function set_image_on_doc(data) {
     else {
         // wide
         big_height = big_width / aspect_ratio;
+  try {
+    var imagedata = new ImageData(new Uint8ClampedArray(data.data), data.width, data.height);
+  }
+  catch (e) {
+    console.log(data);
+    console.log(e);
+    if (state.retries < 10) {
+      get_image();
+      state.retries += 1;
     }
+    return;
+  }
+  state.retries = 0;
 
     createImageBitmap(imagedata, { resizeWidth: big_width, resizeHeight: big_height, resizeQuality: "high" }).then(bitmap => {
         var canvas = document.getElementById("image");

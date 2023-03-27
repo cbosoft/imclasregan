@@ -1,12 +1,13 @@
-var state = { regid: null, lid: null, rid: null, progress: 0, sid: '', time_start: null };
+var state = { regid: null, lid: null, rid: null, progress: 0, sid: '', time_start: null, retries: 0 };
 
 function init(regression_kind) {
-    get_image();
-    get_regression(regression_kind);
-    state.sid = uuidv4();
-    state.progress = 0;
+  get_image();
+  get_regression(regression_kind);
+  state.sid = uuidv4();
+  state.progress = 0;
+  state.retries = 0;
 
-    console.log(state.sid);
+  console.log(state.sid);
 }
 
 function uuidv4() {
@@ -46,13 +47,19 @@ function get_image() {
 }
 
 function set_image_on_doc(data) {
-    try {
-        var imagedata = new ImageData(new Uint8ClampedArray(data.data), data.width, data.height);
+  try {
+    var imagedata = new ImageData(new Uint8ClampedArray(data.data), data.width, data.height);
+  }
+  catch (e) {
+    console.log(data);
+    console.log(e);
+    if (state.retries < 10) {
+      get_image();
+      state.retries += 1;
     }
-    catch (e) {
-        get_one_image();
-        return;
-    }
+    return;
+  }
+  state.retries = 0;
 
     var canvas_id = null;
     if (state.lid) {
