@@ -28,9 +28,9 @@ function send_data(o) {
 }
 
 function get_one_image() {
-    send_data({ command: "GetImage" })
         .then(response => response.json())
         .then(set_image_on_doc);
+  send_data({ command: "GetImage", task: "Regression" })
 }
 
 function get_image() {

@@ -1,5 +1,7 @@
 use rocket::serde::Deserialize;
 
+use super::database::Task;
+
 /// Enum describing a command sent by the client. The command is sent in JSON
 /// format and deserialised to this enum.
 #[derive(Deserialize)]
@@ -10,7 +12,7 @@ pub enum Command<'r> {
     ///
     /// See [get_image](crate::database::get_image) for more
     /// information.
-    GetImage,
+    GetImage { task: Task },
 
     /// Client requests information on the classes involved in the classification task.
     ///

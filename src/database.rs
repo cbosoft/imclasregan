@@ -1,3 +1,5 @@
+use rocket::serde::Deserialize;
+
 use crate::reply::{ClassData, Reply};
 
 fn connect() -> sqlite::Connection {
@@ -98,15 +100,55 @@ pub fn store_multilabel_classification(cid: i64, iid: i64, sid: &str, tt: f64) -
     Reply::Ok
 }
 
+#[derive(Deserialize)]
+#[serde(crate = "rocket::serde")]
+pub enum Task {
+    Regression,
+    Classification,
+    MultilabelClassification,
+}
+
+impl Task {
+    pub fn get_results_table(&self) -> String {
+        match self {
+            Self::Regression => "REGRESSIONRESULTS".to_string(),
+            Self::Classification => "CLASSIFICATIONRESULTS".to_string(),
+            Self::MultilabelClassification => "MULTILABELCLASSIFICATIONRESULTS".to_string(),
+        }
+    }
+}
+
 /// Get an random image from the database and return it as [Reply::Image] if
 /// there are images available, or as [Reply::Error] otherwise.
 ///
 /// # Panics
 /// Panics if the database cannot be opened.
-pub fn get_image() -> Reply {
+pub fn get_image(task: Task) -> Reply {
+    let results_table_name = task.get_results_table();
     let conn = connect();
+
+    // are there unannotated images?
+    let mut statement = conn.prepare("SELECT COUNT(*) FROM IMAGES;").unwrap();
+    statement.next().unwrap();
+    let total_count = statement.read::<i64, _>(0).unwrap();
     let mut statement = conn
-        .prepare("SELECT * FROM IMAGES ORDER BY RANDOM() LIMIT 1;")
+        .prepare(format!(
+            "SELECT COUNT(DISTINCT IMAGE_ID) FROM {results_table_name};"
+        )) // TODO: what if this is not the right task?
+        .unwrap();
+    statement.next().unwrap();
+    let annotated_count = statement.read::<i64, _>(0).unwrap();
+
+    // if there are as-yet unannotated images, only serve them.
+    let mut statement = conn
+        .prepare(if annotated_count >= total_count {
+            "SELECT * FROM IMAGES ORDER BY RANDOM() LIMIT 1;".to_string()
+        } else {
+            format!(
+                "SELECT * FROM IMAGES WHERE ID NOT IN (SELECT DISTINCT IMAGE_ID FROM {results_table_name})
+                    ORDER BY RANDOM() LIMIT 1;"
+            )
+        })
         .unwrap();
 
     if let Ok(sqlite::State::Row) = statement.next() {

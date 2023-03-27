@@ -32,9 +32,9 @@ function get_image() {
     var ctx = canvas.getContext('2d');
     ctx.clearRect(0, 0, canvas.width, canvas.height);
     state.iid = null;
-    send_data({ command: "GetImage" })
         .then(response => response.json())
         .then(set_image_on_doc);
+  send_data({ command: "GetImage", task: "Classification" })
 }
 
 function set_image_on_doc(data) {
