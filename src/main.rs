@@ -37,7 +37,7 @@ use crate::database::{
 #[post("/site", data = "<cmd>")]
 async fn command_handler(cmd: Json<Command<'_>>) -> content::RawJson<String> {
     let reply = match cmd.0 {
-        Command::GetImage => get_image(),
+        Command::GetImage { task } => get_image(task),
         Command::GetClassifications => get_classes(),
         Command::GetRegression { kind } => get_regression(kind),
         Command::StoreClassificationResult { cid, iid, sid, tt } => {
